@@ -8,3 +8,8 @@
 
 
 [demo apk 下载](https://github.com/liweiGe/Demo/blob/master/demoVideo/app-debug.apk)
+
+
+vrDemo是一个vr显示功能的demo,可以玩一玩
+
+[VR 的 apk 下载](/demoVideo/vrDemo-debug.apk)
