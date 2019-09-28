@@ -1,1 +1,1 @@
-include ':app', ':pic_Jianhuang', ':vrDemo', ':glpanorama'
+include ':app', ':pic_Jianhuang', ':vrDemo', ':glpanorama', ':txvideolib'
