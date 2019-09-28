@@ -25,7 +25,7 @@ import java.lang.ref.WeakReference;
  * Created by liyuejiao on 2018/7/3.
  */
 
-public abstract class TCVodControllerBase extends RelativeLayout implements SeekBar.OnSeekBarChangeListener {
+public abstract class TCVodControllerBase extends RelativeLayout implements SeekBar.OnSeekBarChangeListener,View.OnClickListener  {
 
     protected LayoutInflater mLayoutInflater;
     protected VodController mVodController;

@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 
 import com.video.txvideolib.R;
 import com.video.txvideolib.SuperPlayerConst;
-import com.video.txvideolib.view.TCPointSeekBar;
 import com.video.txvideolib.view.TCVideoProgressLayout;
 import com.video.txvideolib.view.TCVolumeBrightnessProgressLayout;
 
@@ -20,8 +20,7 @@ import java.lang.ref.WeakReference;
  * <p>
  * 超级播放器全屏控制界面
  */
-public class TCVodControllerLarge extends TCVodControllerBase
-        implements View.OnClickListener,  TCPointSeekBar.OnSeekBarPointClickListener {
+public class TCVodControllerLarge extends TCVodControllerBase{
 
     private RelativeLayout mLayoutTop;
     private LinearLayout mLayoutBottom;
@@ -142,9 +141,9 @@ public class TCVodControllerLarge extends TCVodControllerBase
         mTvCurrent = findViewById(R.id.tv_current);
         mTvDuration =  findViewById(R.id.tv_duration);
 
-        mSeekBarProgress = (TCPointSeekBar) findViewById(R.id.seekbar_progress);
+        mSeekBarProgress = findViewById(R.id.seekbar_progress);
         mSeekBarProgress.setProgress(0);
-        mSeekBarProgress.setOnPointClickListener(this);
+        mSeekBarProgress.setMax(100);
         mSeekBarProgress.setOnSeekBarChangeListener(this);
 
         mLayoutReplay.setOnClickListener(this);
@@ -270,37 +269,6 @@ public class TCVodControllerLarge extends TCVodControllerBase
             release();
         } catch (Exception e) {
         } catch (Error e) {
-        }
-    }
-
-
-    @Override
-    public void onProgressChanged(TCPointSeekBar seekBar, int progress, boolean isFromUser) {
-        super.onProgressChanged(seekBar, progress, isFromUser);
-        // 加载点播缩略图
-        if (isFromUser && mPlayType == SuperPlayerConst.PLAYTYPE_VOD) {
-            setThumbnail(progress);
-        }
-    }
-
-    @Override
-    protected void onGestureVideoProgress(int progress) {
-        super.onGestureVideoProgress(progress);
-        setThumbnail(progress);
-    }
-
-
-    private void setThumbnail(int progress) {
-        float percentage = ((float) progress) / mSeekBarProgress.getMax();
-        float seekTime = (mVodController.getDuration() * percentage);
-    }
-
-    //
-    @Override
-    public void onSeekBarPointClick(final View view, final int pos) {
-        if (mHideLockViewRunnable!=null) {
-            this.getHandler().removeCallbacks(mHideViewRunnable);
-            this.getHandler().postDelayed(mHideViewRunnable, 7000);
         }
     }
 

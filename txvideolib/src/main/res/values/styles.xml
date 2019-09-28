@@ -6,18 +6,4 @@
         <!--<item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>-->
     </style>
 
-    <declare-styleable name="TCPointSeekBar">
-        <attr name="psb_thumbBackground" format="reference" />
-        <attr name="psb_backgroundColor" format="color" />
-        <attr name="psb_progressColor" format="color" />
-        <attr name="psb_progress" format="integer" />
-        <attr name="psb_max" format="integer" />
-        <attr name="psb_progressHeight" format="dimension" />
-    </declare-styleable>
-
-    <style name="RadiobuttonStyle">
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:button">@null</item>
-    </style>
 </resources>

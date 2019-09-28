@@ -23,7 +23,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
     private static final String TAG = "TCVodControllerSmall";
     private LinearLayout mLayoutBottom;
     private ImageView mIvPause;
-    private ImageView mIvFullScreen;
 
     private ImageView mBackground;
 
@@ -49,7 +48,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
     @Override
     void onShow() {
         mLayoutBottom.setVisibility(View.VISIBLE);
-
     }
 
     /**
@@ -72,22 +70,23 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
         mSeekBarProgress = findViewById(R.id.seekbar_progress);
         mSeekBarProgress.setProgress(0);
         mSeekBarProgress.setMax(100);
-        mIvFullScreen = (ImageView) findViewById(R.id.iv_fullscreen);
-
+        mSeekBarProgress.setOnSeekBarChangeListener(this);
+        ImageView mIvFullScreen = findViewById(R.id.iv_fullscreen);
+        mIvFullScreen.setOnClickListener(this);
 
         mIvPause.setOnClickListener(this);
-        mIvFullScreen.setOnClickListener(this);
 
         mLayoutReplay.setOnClickListener(this);
 
-
         mGestureVolumeBrightnessProgressLayout = (TCVolumeBrightnessProgressLayout)findViewById(R.id.gesture_progress);
-
         mGestureVideoProgressLayout = (TCVideoProgressLayout) findViewById(R.id.video_progress_layout);
 
-        mBackground = (ImageView)findViewById(R.id.small_iv_background);
+        mBackground = findViewById(R.id.small_iv_background);
     }
 
+    public ImageView getVideoCoverImage() {
+        return mBackground;
+    }
 
     public void dismissBackground() {
         this.post(new Runnable() {
@@ -109,11 +108,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
                 alpha.start();
             }
         });
-    }
-
-    public void showBackground() {
-        mBackground.setVisibility(VISIBLE);
-
     }
 
 
@@ -145,68 +139,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
         mVodController.onRequestPlayMode(SuperPlayerConst.PLAYMODE_FULLSCREEN);
     }
 
-
-
-//    @Override
-//    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//
-//    }
-//
-//    @Override
-//    public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//    }
-//
-//    @Override
-//    public void onStopTrackingTouch(SeekBar seekBar) {
-//        // 拖动seekbar结束时,获取seekbar当前进度,进行seek操作,最后更新seekbar进度
-//        int curProgress = seekBar.getProgress();
-//        int maxProgress = seekBar.getMax();
-//
-//        switch (mPlayType) {
-//            case SuperPlayerConst.PLAYTYPE_VOD:
-//                if (curProgress >= 0 && curProgress < maxProgress) {
-//                    // 关闭重播按钮
-//                    updateReplay(false);
-//                    float percentage = ((float) curProgress) / maxProgress;
-//                    int position = (int) (mVodController.getDuration() * percentage);
-//                    mVodController.seekTo(position);
-//                    mVodController.resume();
-//                }
-//                break;
-//            case SuperPlayerConst.PLAYTYPE_LIVE:
-//            case SuperPlayerConst.PLAYTYPE_LIVE_SHIFT:
-//                updateLiveLoadingState(true);
-////                mTrackTime = mLivePlayTime * curProgress / maxProgress;
-//                TXCLog.i(TAG, "onStopTrackingTouch time:" + mTrackTime);
-////                mVodController.onBackToRecord(mLiveBaseTime, mTrackTime);
-//                break;
-//        }
-//    }
-
-
-
-    /**
-     * 更新点播播放进度
-     */
-//    public void updateVodVideoProgress() {
-//        float curTime = mVodController.getCurrentPlaybackTime();
-//        float durTime = mVodController.getDuration();
-//
-//        if (durTime > 0 && curTime <= durTime) {
-//            float percentage = curTime / durTime;
-//            if (percentage >= 0 && percentage <= 1) {
-//                int progress = Math.round(percentage * mSeekBarProgress.getMax());
-//                mSeekBarProgress.setProgress(progress);
-//
-//                if (durTime >= 0 && curTime <= durTime) {
-//                    mTvCurrent.setText(TCTimeUtils.formattedTime((long) curTime));
-//                    mTvDuration.setText(TCTimeUtils.formattedTime((long) durTime));
-//                }
-//            }
-//        }
-//    }
-
     /**
      * 更新播放UI
      *
@@ -222,31 +154,6 @@ public class TCVodControllerSmall extends TCVodControllerBase implements View.On
             mIvPause.setImageResource(R.drawable.ic_vod_play_normal);
         }
     }
-
-    /**
-     * 更新重新播放按钮状态
-     *
-     * @param replay
-     */
-//    public void updateReplay(boolean replay) {
-//        if (replay) {
-//            mLayoutReplay.setVisibility(View.VISIBLE);
-//        } else {
-//            mLayoutReplay.setVisibility(View.GONE);
-//        }
-//    }
-
-//    /**
-//     * 更新直播播放时间和进度
-//     *
-//     * @param baseTime
-//     */
-//    public void updateLivePlayTime(long baseTime) {
-//        super.updateLivePlayTime(baseTime);
-//        mTvCurrent.setText(TCTimeUtils.formattedTime(mLivePlayTime));
-//    }
-
-
 
     /**
      * 更新播放类型

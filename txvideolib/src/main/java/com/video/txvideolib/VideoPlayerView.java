@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -37,8 +38,6 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
     private int mPlayMode = SuperPlayerConst.PLAYMODE_WINDOW;
     private boolean mLockScreen = false;
 
-    // UI
-    private ViewGroup mRootView;
     private TXCloudVideoView mTXCloudVideoView;
     private TCVodControllerLarge mVodControllerLarge;
     private TCVodControllerSmall mVodControllerSmall;
@@ -48,11 +47,9 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
     private LayoutParams mVodControllerLargeParams;
     // 点播播放器
     private TXVodPlayer mVodPlayer;
-    private TXVodPlayConfig mVodPlayConfig;
 
     private OnSuperPlayerViewCallback mPlayerViewCallback;
     private int mCurrentPlayState = SuperPlayerConst.PLAYSTATE_PLAY;
-    private long mReportVodStartTime = -1;
     private int mCurrentPlayType;
     private String mCurrentPlayVideoURL;
 
@@ -73,7 +70,8 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
 
     private void initView(Context context) {
         mContext = context;
-        mRootView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_player_view, null);
+
+        ViewGroup mRootView = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, false);
         mTXCloudVideoView = (TXCloudVideoView) mRootView.findViewById(R.id.cloud_video_view);
         mVodControllerLarge = (TCVodControllerLarge) mRootView.findViewById(R.id.controller_large);
         mVodControllerSmall = (TCVodControllerSmall) mRootView.findViewById(R.id.controller_small);
@@ -130,7 +128,7 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
 
         SuperPlayerGlobalConfig config = SuperPlayerGlobalConfig.getInstance();
 
-        mVodPlayConfig = new TXVodPlayConfig();
+        TXVodPlayConfig mVodPlayConfig = new TXVodPlayConfig();
         mVodPlayConfig.setCacheFolderPath(Environment.getExternalStorageDirectory().getPath() + "/txcache");
         mVodPlayConfig.setMaxCacheItems(config.maxCacheItem);
 
@@ -156,18 +154,14 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
         stopPlay();
 
         initVodPlayer(getContext());
-
-        String videoURL = null;
-        if (!TextUtils.isEmpty(modelV3.url)) { // 传统URL模式播放
-            videoURL = modelV3.url;
-        }
+        // 传统URL模式播放
+        String videoURL = modelV3.url;
 
         if (TextUtils.isEmpty(videoURL)) {
             Toast.makeText(this.getContext(), "播放视频失败，播放连接为空", Toast.LENGTH_SHORT).show();
             return;
         }
         // 点播播放器：播放点播文件
-        mReportVodStartTime = System.currentTimeMillis();
         mVodPlayer.setPlayerView(mTXCloudVideoView);
 
         playVodURL(videoURL);
@@ -184,14 +178,15 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
     }
 
     /**
-     * 设置封面的关键代码
-     *
-     * @param coverUrl
+     * 封面由外部图片框架展示,内部只提供控件
+     * @return
      */
-    private void showSmallCoverPic(String coverUrl) {
-        if (mTXCloudVideoView == null) return;
-//        mVodControllerSmall.setBackground();
-        mVodControllerSmall.showBackground();
+    public ImageView getCover() {
+        if (mVodControllerSmall != null) {
+            return mVodControllerSmall.getVideoCoverImage();
+        } else {
+            return null;
+        }
     }
 
 
@@ -239,15 +234,7 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
             mVodPlayer.setVodListener(null);
             mVodPlayer.stopPlay(false);
         }
-
         mCurrentPlayState = SuperPlayerConst.PLAYSTATE_PAUSE;
-        reportPlayTime();
-    }
-
-    private void reportPlayTime() {
-        if (mReportVodStartTime != -1) {
-            mReportVodStartTime = -1;
-        }
     }
 
     /**
