@@ -3,6 +3,7 @@ package com.video.txvideolib;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -28,6 +29,7 @@ import java.lang.reflect.Constructor;
 
 /**
  * 播放器控件,对播放器做的一层封装 ,核心是 TXVodPlayer,真正的播放内核
+ * https://cloud.tencent.com/document/product/881/20216#step-10.3A-.E9.A2.84.E5.8A.A0.E8.BD.BD
  */
 
 public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListener,
@@ -112,7 +114,6 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
                 }
             }
         });
-
     }
 
 
@@ -125,17 +126,16 @@ public class VideoPlayerView extends RelativeLayout implements ITXVodPlayListene
         if (mVodPlayer != null)
             return;
         mVodPlayer = new TXVodPlayer(context);
-
-        SuperPlayerGlobalConfig config = SuperPlayerGlobalConfig.getInstance();
-
         TXVodPlayConfig mVodPlayConfig = new TXVodPlayConfig();
         mVodPlayConfig.setCacheFolderPath(Environment.getExternalStorageDirectory().getPath() + "/txcache");
-        mVodPlayConfig.setMaxCacheItems(config.maxCacheItem);
-
+        // 播放器最大缓存个数 （ 默认缓存 5 ）
+        mVodPlayConfig.setMaxCacheItems(5);
         mVodPlayer.setConfig(mVodPlayConfig);
-        mVodPlayer.setRenderMode(config.renderMode);
+//        默认播放填充模式 （ 默认播放模式为 自适应模式 ）
+        mVodPlayer.setRenderMode(TXLiveConstants.RENDER_MODE_ADJUST_RESOLUTION);
         mVodPlayer.setVodListener(this);
-        mVodPlayer.enableHardwareDecode(config.enableHWAcceleration);
+//        是否开启硬件加速 （ 默认开启硬件加速 ）这个参数可能会导致黑屏一下
+        mVodPlayer.enableHardwareDecode(false);
     }
 
     /**
